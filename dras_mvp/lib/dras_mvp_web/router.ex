@@ -54,6 +54,7 @@ defmodule DrasMvpWeb.Router do
       live "/csv-import", CsvImportLive
       live "/study-programs", StudyProgramsLive
       live "/courses", CourseManagementLive
+      live "/users", UserManagementLive
     end
 
     post "/users/update-password", UserSessionController, :update_password
