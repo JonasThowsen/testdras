@@ -124,18 +124,12 @@
             <p class="text-sm text-gray-600 mb-3">
               Set up Bachelor, Master, and other degree programs
             </p>
-            <button
-              disabled={false}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.academic_year < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
-            >
-              navigate="/study-programs"
-              class="w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium bg-blue-600 text-white hover:bg-blue-700"
+            <a
+              href="/study-programs"
+              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.academic_year < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Study Programs
-                        </button>
-          </div>
-        </div><!-- Phase 3: Courses/Subjects --><div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow"><div class="p-6 border-b border-gray-200"><div class="flex items-center"><div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.courses == 100, do: "bg-green-500", else: "bg-gray-400"}"}><.icon name={status_icon(@setup_progress.courses)} class="w-5 h-5 text-white" /></div><div class="ml-3"><h3 class="text-lg font-medium text-gray-900">Courses & Subjects</h3><p class="text-sm text-gray-500">Set up courses for the year</p></div></div></div><div class="p-6"><div class="mb-4"><div class="flex justify-between text-sm text-gray-600 mb-1"><span>Progress</span><span>{@setup_progress.courses}%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.courses)}"} style={"width: #{@setup_progress.courses}%"}></div></div></div><p class="text-sm text-gray-600 mb-3">Create and manage courses, credit hours, and semester assignments</p><a disabled={@setup_progress.study_programs < 100} class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}></a>
-            </button>
+            </a>
           </div>
         </div>
         
@@ -171,7 +165,7 @@
             </p>
             <button
               disabled={@setup_progress.study_programs < 100}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Courses
             </button>
@@ -210,7 +204,7 @@
             </p>
             <button
               disabled={@setup_progress.courses < 100}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.courses < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.courses < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Classes
             </button>
@@ -252,7 +246,7 @@
             </p>
             <button
               disabled={@setup_progress.classes < 100}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.classes < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.classes < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Teaching Assignments
             </button>
@@ -312,7 +306,7 @@
           <p class="text-sm text-gray-600 mb-4">Manage academic personnel and their roles</p>
           <button
             disabled={@setup_progress.exam_data < 100}
-            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.exam_data < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.exam_data < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
           >
             Manage Staff
           </button>
@@ -331,7 +325,7 @@
           </p>
           <button
             disabled={@setup_progress.staff_management < 100}
-            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.staff_management < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.staff_management < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
           >
             Calculate Resources
           </button>
@@ -348,7 +342,7 @@
           <p class="text-sm text-gray-600 mb-4">Generate reports and view analytics</p>
           <button
             disabled={@setup_progress.resource_allocation < 100}
-            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.resource_allocation < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.resource_allocation < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
           >
             View Reports
           </button>
