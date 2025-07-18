@@ -1,0 +1,489 @@
+<Layouts.app flash={@flash}>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header Section -->
+    <div class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Course Management & Hour Allocation</h1>
+            <p class="text-gray-600 mt-1">Manage courses and allocate teaching hours</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <%= if @current_year do %>
+              <div class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-medium">
+                Active Year: {@current_year.name}
+              </div>
+            <% else %>
+              <div class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg font-medium">
+                No Active Year Selected
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Progress Indicator -->
+      <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Setup Progress - Phase 3</h2>
+          <span class="text-sm text-gray-600">Course Management & Hour Allocation</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <.icon name="hero-check" class="w-5 h-5 text-white" />
+            </div>
+            <span class="ml-2 text-sm text-gray-600">Academic Year</span>
+          </div>
+          <div class="flex-1 h-1 bg-green-500"></div>
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <.icon name="hero-check" class="w-5 h-5 text-white" />
+            </div>
+            <span class="ml-2 text-sm text-gray-600">Study Programs</span>
+          </div>
+          <div class="flex-1 h-1 bg-blue-500"></div>
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <.icon name="hero-book-open" class="w-5 h-5 text-white" />
+            </div>
+            <span class="ml-2 text-sm font-medium text-blue-600">Courses & Hours</span>
+          </div>
+        </div>
+      </div>
+      
+<!-- Action Bar -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-lg font-medium text-gray-900">Course Management</h3>
+          <p class="text-sm text-gray-600">
+            Create courses and allocate teaching hours to staff
+          </p>
+        </div>
+        <button
+          phx-click="show_create_form"
+          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+        >
+          <.icon name="hero-plus" class="w-4 h-4 inline mr-2" /> Add Course
+        </button>
+      </div>
+      
+<!-- Course Cards with Hour Allocation -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <%= for course <- @courses do %>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+            <div class="p-6">
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center">
+                  <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <.icon name="hero-book-open" class="w-6 h-6 text-indigo-600" />
+                  </div>
+                  <div class="ml-3">
+                    <h4 class="text-lg font-medium text-gray-900">{course.name}</h4>
+                    <p class="text-sm text-gray-600">{course.code}</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class={"text-xs px-2 py-1 rounded-full #{if course.status == "active", do: "bg-green-100 text-green-800", else: "bg-yellow-100 text-yellow-800"}"}>
+                    {String.capitalize(course.status)}
+                  </span>
+                  <button
+                    phx-click="delete_course"
+                    phx-value-id={course.id}
+                    data-confirm="Are you sure you want to delete this course?"
+                    class="text-red-600 hover:text-red-800 p-1 rounded"
+                  >
+                    <.icon name="hero-trash" class="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              
+<!-- Course Details -->
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="space-y-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Credits:</span>
+                    <span class="font-medium text-gray-900">{course.credits}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Department:</span>
+                    <span class="font-medium text-gray-900">{course.department}</span>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Level:</span>
+                    <span class="font-medium text-gray-900">{course.level}</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Semester:</span>
+                    <span class="font-medium text-gray-900">{course.semester}</span>
+                  </div>
+                </div>
+              </div>
+              
+<!-- Hour Allocation Summary -->
+              <div class="border-t pt-4">
+                <div class="flex items-center justify-between mb-3">
+                  <h5 class="text-sm font-medium text-gray-900">Teaching Hours Allocated</h5>
+                  <button
+                    phx-click="show_assign_form"
+                    phx-value-course_id={course.id}
+                    class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    + Assign Staff
+                  </button>
+                </div>
+
+                <%= if length(course.assigned_staff) > 0 do %>
+                  <div class="space-y-2">
+                    <%= for assignment <- course.assigned_staff do %>
+                      <div class="flex items-center justify-between bg-gray-50 rounded p-2">
+                        <div class="flex items-center">
+                          <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <.icon name="hero-user" class="w-4 h-4 text-blue-600" />
+                          </div>
+                          <div class="ml-2">
+                            <p class="text-sm font-medium text-gray-900">{assignment.name}</p>
+                            <p class="text-xs text-gray-600">
+                              {String.capitalize(assignment.type)}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="text-right">
+                          <p class="text-sm font-medium text-gray-900">{assignment.hours}h</p>
+                          <p class="text-xs text-gray-600">
+                            {Float.round(assignment.hours / 40 * 100, 1)}% load
+                          </p>
+                        </div>
+                      </div>
+                    <% end %>
+                    
+<!-- Total Hours Summary -->
+                    <div class="border-t pt-2 mt-2">
+                      <div class="flex justify-between text-sm font-medium">
+                        <span class="text-gray-900">Total Hours:</span>
+                        <span class="text-indigo-600">
+                          {Enum.sum(Enum.map(course.assigned_staff, & &1.hours))}h
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                <% else %>
+                  <div class="text-center py-4">
+                    <.icon name="hero-user-plus" class="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <p class="text-sm text-gray-500">No staff assigned yet</p>
+                    <button
+                      phx-click="show_assign_form"
+                      phx-value-course_id={course.id}
+                      class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-1"
+                    >
+                      Assign Teaching Staff
+                    </button>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+<!-- Staff Workload Overview -->
+      <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Staff Workload Overview</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <%= for staff_member <- @staff do %>
+            <div class="border rounded-lg p-4">
+              <div class="flex items-center mb-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <.icon name="hero-user" class="w-5 h-5 text-purple-600" />
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-900">{staff_member.name}</p>
+                  <p class="text-xs text-gray-600">{staff_member.department}</p>
+                </div>
+              </div>
+              
+<!-- Workload Progress Bar -->
+              <div class="mb-2">
+                <div class="flex justify-between text-xs text-gray-600 mb-1">
+                  <span>Current Load</span>
+                  <span>75% of {staff_member.workload_limit}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+
+              <div class="text-xs text-gray-600">
+                Available: 25% capacity
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+<!-- Course Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-book-open" class="w-4 h-4 text-blue-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Total Courses</p>
+              <p class="text-lg font-semibold text-gray-900">{length(@courses)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-check-circle" class="w-4 h-4 text-green-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Active Courses</p>
+              <p class="text-lg font-semibold text-gray-900">
+                {Enum.count(@courses, fn c -> c.status == "active" end)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-clock" class="w-4 h-4 text-indigo-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Total Hours</p>
+              <p class="text-lg font-semibold text-gray-900">
+                {Enum.sum(
+                  Enum.flat_map(@courses, fn c -> Enum.map(c.assigned_staff, & &1.hours) end)
+                )}h
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-users" class="w-4 h-4 text-purple-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Staff Assigned</p>
+              <p class="text-lg font-semibold text-gray-900">{length(@staff)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+<!-- Create Course Modal -->
+    <%= if @show_create_form do %>
+      <div
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        phx-click="hide_create_form"
+      >
+        <div
+          class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+          phx-click-away="hide_create_form"
+        >
+          <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Create New Course</h3>
+
+            <form phx-submit="create_course" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
+                <input
+                  type="text"
+                  name="code"
+                  placeholder="e.g., MED-3001"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Course Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="e.g., Advanced Clinical Practice"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Credits</label>
+                <input
+                  type="number"
+                  name="credits"
+                  placeholder="e.g., 6.0"
+                  step="0.5"
+                  min="0"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                <select
+                  name="department"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select department</option>
+                  <option value="Medicine">Medicine</option>
+                  <option value="Biomedical Sciences">Biomedical Sciences</option>
+                  <option value="Nursing">Nursing</option>
+                  <option value="Public Health">Public Health</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Level</label>
+                <select
+                  name="level"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select level</option>
+                  <option value="Bachelor">Bachelor</option>
+                  <option value="Master">Master</option>
+                  <option value="PhD">PhD</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+                <select
+                  name="semester"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select semester</option>
+                  <option value="Fall">Fall</option>
+                  <option value="Spring">Spring</option>
+                  <option value="Summer">Summer</option>
+                </select>
+              </div>
+
+              <div class="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  phx-click="hide_create_form"
+                  class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Create Course
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+<!-- Staff Assignment Modal -->
+    <%= if @show_assign_form && @selected_course do %>
+      <div
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        phx-click="hide_assign_form"
+      >
+        <div
+          class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+          phx-click-away="hide_assign_form"
+        >
+          <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">
+              Assign Staff to {@selected_course.name}
+            </h3>
+
+            <form phx-submit="assign_staff" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Staff Member</label>
+                <select
+                  name="staff_id"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select staff member</option>
+                  <%= for staff <- @staff do %>
+                    <option value={staff.id}>{staff.name} - {staff.department}</option>
+                  <% end %>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Assignment Type
+                </label>
+                <select
+                  name="assignment_type"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select type</option>
+                  <option value="lecturer">Lecturer</option>
+                  <option value="assistant">Teaching Assistant</option>
+                  <option value="examiner">Examiner</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Hours Allocated
+                </label>
+                <input
+                  type="number"
+                  name="hours_allocated"
+                  placeholder="e.g., 40.0"
+                  step="0.5"
+                  min="0"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                />
+              </div>
+
+              <div class="bg-blue-50 rounded-lg p-3">
+                <p class="text-sm text-blue-800">
+                  <strong>Tip:</strong>
+                  Typical allocations: <br />• Lecturer: 30-60 hours
+                  <br />• Assistant: 10-20 hours <br />• Examiner: 5-15 hours
+                </p>
+              </div>
+
+              <div class="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  phx-click="hide_assign_form"
+                  class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Assign Staff
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</Layouts.app>
