@@ -1,186 +1,478 @@
 <Layouts.app flash={@flash}>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50">
     <!-- Header Section -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-semibold text-gray-900">Academic Year Management</h1>
-          <p class="text-sm text-gray-600 mt-1">Manage academic years and system configuration</p>
+    <div class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+              DRAS - Resource Administration System
+            </h1>
+            <p class="text-gray-600 mt-1">Academic Resource Management Dashboard</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <%= if @current_year do %>
+              <div class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-medium">
+                Active Year: {@current_year.name}
+              </div>
+            <% else %>
+              <div class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg font-medium">
+                No Active Year Selected
+              </div>
+            <% end %>
+          </div>
         </div>
-        <button
-          phx-click="new_year"
-          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium transition-colors"
-        >
-          Create New Academic Year
-        </button>
       </div>
     </div>
-    
-<!-- Current Active Year -->
-    <%= if @current_year do %>
-      <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-        <div class="flex items-center">
-          <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-          <div>
-            <p class="text-sm font-medium text-green-800">Current Active Academic Year</p>
-            <p class="text-lg font-semibold text-green-900">{@current_year.name}</p>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Overall Progress Bar -->
+      <%= if @current_year do %>
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Academic Year Setup Progress</h2>
+            <span class="text-sm text-gray-600">{@setup_progress.overall}% Complete</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div
+              class={"w-full h-3 rounded-full transition-all duration-500 #{progress_color(@setup_progress.overall)}"}
+              style={"width: #{@setup_progress.overall}%"}
+            >
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+<!-- Setup Wizard Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Phase 1: Academic Year Creation & Setup -->
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.academic_year == 100, do: "bg-green-500", else: "bg-blue-500"}"}>
+                <.icon
+                  name={status_icon(@setup_progress.academic_year)}
+                  class="w-5 h-5 text-white"
+                />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Academic Year Setup</h3>
+                <p class="text-sm text-gray-500">Create and configure academic year</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{@setup_progress.academic_year}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.academic_year)}"}
+                  style={"width: #{@setup_progress.academic_year}%"}
+                >
+                </div>
+              </div>
+            </div>
+            <%= if @setup_progress.academic_year == 100 do %>
+              <p class="text-sm text-green-600 mb-3">✓ Academic year configured</p>
+            <% else %>
+              <p class="text-sm text-gray-600 mb-3">
+                Set up new academic year and copy data from previous year
+              </p>
+            <% end %>
+            <button
+              phx-click="show_create_form"
+              class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+            >
+              Manage Academic Years
+            </button>
+          </div>
+        </div>
+        
+<!-- Phase 2: Study Programs -->
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.study_programs == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+                <.icon
+                  name={status_icon(@setup_progress.study_programs)}
+                  class="w-5 h-5 text-white"
+                />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Study Programs</h3>
+                <p class="text-sm text-gray-500">Configure degree programs</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{@setup_progress.study_programs}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.study_programs)}"}
+                  style={"width: #{@setup_progress.study_programs}%"}
+                >
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Set up Bachelor, Master, and other degree programs
+            </p>
+            <button
+              disabled={@setup_progress.academic_year < 100}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.academic_year < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            >
+              Manage Study Programs
+            </button>
+          </div>
+        </div>
+        
+<!-- Phase 3: Courses/Subjects -->
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.courses == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+                <.icon name={status_icon(@setup_progress.courses)} class="w-5 h-5 text-white" />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Courses & Subjects</h3>
+                <p class="text-sm text-gray-500">Set up courses for the year</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{@setup_progress.courses}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.courses)}"}
+                  style={"width: #{@setup_progress.courses}%"}
+                >
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Create and manage courses, credit hours, and semester assignments
+            </p>
+            <button
+              disabled={@setup_progress.study_programs < 100}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            >
+              Manage Courses
+            </button>
+          </div>
+        </div>
+        
+<!-- Phase 4: Classes -->
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.classes == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+                <.icon name={status_icon(@setup_progress.classes)} class="w-5 h-5 text-white" />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Classes & Groups</h3>
+                <p class="text-sm text-gray-500">Organize student groups</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{@setup_progress.classes}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.classes)}"}
+                  style={"width: #{@setup_progress.classes}%"}
+                >
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Set up student classes, groups, and course instances
+            </p>
+            <button
+              disabled={@setup_progress.courses < 100}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.courses < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            >
+              Manage Classes
+            </button>
+          </div>
+        </div>
+        
+<!-- Phase 5: Teaching Assignments -->
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.teaching_assignments == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+                <.icon
+                  name={status_icon(@setup_progress.teaching_assignments)}
+                  class="w-5 h-5 text-white"
+                />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Teaching Assignments</h3>
+                <p class="text-sm text-gray-500">Assign staff to courses</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{@setup_progress.teaching_assignments}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.teaching_assignments)}"}
+                  style={"width: #{@setup_progress.teaching_assignments}%"}
+                >
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Assign lecturers, assistants, and examiners to courses
+            </p>
+            <button
+              disabled={@setup_progress.classes < 100}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.classes < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            >
+              Manage Teaching Assignments
+            </button>
+          </div>
+        </div>
+        
+<!-- Phase 6: Exam Data Import -->
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.exam_data == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+                <.icon name={status_icon(@setup_progress.exam_data)} class="w-5 h-5 text-white" />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-lg font-medium text-gray-900">Exam Data Import</h3>
+                <p class="text-sm text-gray-500">Import exam schedules (CSV)</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{@setup_progress.exam_data}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class={"h-2 rounded-full transition-all duration-300 #{progress_color(@setup_progress.exam_data)}"}
+                  style={"width: #{@setup_progress.exam_data}%"}
+                >
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              Upload exam data from exam office (CSV format)
+            </p>
+            <a
+              href="/csv-import"
+              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.teaching_assignments < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            >
+              Import Exam Data
+            </a>
           </div>
         </div>
       </div>
-    <% else %>
-      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-        <p class="text-sm text-yellow-800">
-          No active academic year selected. Please activate a year to begin.
-        </p>
+      
+<!-- Additional Management Sections -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Staff Management -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center mb-4">
+            <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.staff_management == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+              <.icon name="hero-users" class="w-5 h-5 text-white" />
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">Staff Management</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Manage academic personnel and their roles</p>
+          <button
+            disabled={@setup_progress.exam_data < 100}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.exam_data < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+          >
+            Manage Staff
+          </button>
+        </div>
+        
+<!-- Resource Allocation -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center mb-4">
+            <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.resource_allocation == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+              <.icon name="hero-calculator" class="w-5 h-5 text-white" />
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">Resource Allocation</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">
+            Calculate teaching loads and resource distribution
+          </p>
+          <button
+            disabled={@setup_progress.staff_management < 100}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.staff_management < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+          >
+            Calculate Resources
+          </button>
+        </div>
+        
+<!-- Reports & Analytics -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center mb-4">
+            <div class={"flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center #{if @setup_progress.reports == 100, do: "bg-green-500", else: "bg-gray-400"}"}>
+              <.icon name="hero-chart-bar" class="w-5 h-5 text-white" />
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">Reports & Analytics</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Generate reports and view analytics</p>
+          <button
+            disabled={@setup_progress.resource_allocation < 100}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.resource_allocation < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+          >
+            View Reports
+          </button>
+        </div>
+        
+<!-- System Administration -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center mb-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center">
+              <.icon name="hero-cog-6-tooth" class="w-5 h-5 text-white" />
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">System Admin</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">User management and system configuration</p>
+          <button class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors text-sm font-medium">
+            Admin Panel
+          </button>
+        </div>
       </div>
-    <% end %>
-    
-<!-- New Year Form -->
-    <%= if @show_form do %>
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Create New Academic Year</h3>
-
-        <.form
-          for={@form}
-          id="academic-year-form"
-          phx-change="validate"
-          phx-submit="save"
-          class="space-y-4"
+      
+<!-- Academic Year Management Modal -->
+      <%= if @show_create_form do %>
+        <div
+          class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+          phx-click="hide_create_form"
         >
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <.input
-                field={@form[:name]}
-                type="text"
-                label="Academic Year Name"
-                placeholder="e.g., 2024-2025"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <.input
-                field={@form[:start_date]}
-                type="date"
-                label="Start Date"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <.input
-                field={@form[:end_date]}
-                type="date"
-                label="End Date"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          <div class="flex justify-end space-x-3">
-            <button
-              type="button"
-              phx-click="cancel"
-              class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 font-medium transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
-            >
-              Create Academic Year
-            </button>
-          </div>
-        </.form>
-      </div>
-    <% end %>
-    
-<!-- Academic Years Table -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">Academic Years</h3>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Academic Year
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Period
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Progress
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <%= for year <- @academic_years do %>
-              <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <%= if year.is_active do %>
-                      <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                    <% else %>
-                      <div class="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
-                    <% end %>
-                    <span class="text-sm font-medium text-gray-900">{year.name}</span>
+          <div
+            class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+            phx-click-away="hide_create_form"
+          >
+            <div class="mt-3">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Academic Year Management</h3>
+              
+<!-- Create Form -->
+              <form phx-submit="create_academic_year" class="mb-6">
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                      Academic Year Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="e.g., 2024-2025"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                    />
                   </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {year.start_date} - {year.end_date}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class={[
-                    "inline-flex px-2 py-1 text-xs font-semibold rounded-full",
-                    case year.status do
-                      "active" -> "bg-green-100 text-green-800"
-                      "planning" -> "bg-blue-100 text-blue-800"
-                      "completed" -> "bg-gray-100 text-gray-800"
-                      _ -> "bg-yellow-100 text-yellow-800"
-                    end
-                  ]}>
-                    {String.capitalize(year.status)}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <div class="text-xs text-gray-500">
-                    Courses: {year.course_setup_count} |
-                    Staff: {year.staff_assignment_count} |
-                    Resources: {year.resource_allocation_count}
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      name="start_date"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                    />
                   </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <%= unless year.is_active do %>
-                    <button
-                      phx-click="set_active"
-                      phx-value-id={year.id}
-                      class="text-blue-600 hover:text-blue-900 font-medium"
-                    >
-                      Activate
-                    </button>
-                  <% end %>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input
+                      type="date"
+                      name="end_date"
+                      required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                    />
+                  </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
                   <button
-                    phx-click="delete"
-                    phx-value-id={year.id}
-                    data-confirm="Are you sure you want to delete this academic year?"
-                    class="text-red-600 hover:text-red-900 font-medium"
+                    type="button"
+                    phx-click="hide_create_form"
+                    class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
                   >
-                    Delete
+                    Cancel
                   </button>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+                  <button
+                    type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Create Academic Year
+                  </button>
+                </div>
+              </form>
+              
+<!-- Existing Years List -->
+              <%= if length(@academic_years) > 0 do %>
+                <div class="border-t pt-4">
+                  <h4 class="text-md font-medium text-gray-900 mb-3">Existing Academic Years</h4>
+                  <div class="space-y-2">
+                    <%= for year <- @academic_years do %>
+                      <div class="flex items-center justify-between p-3 border rounded-md">
+                        <div class="flex items-center">
+                          <%= if year.is_active do %>
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                          <% else %>
+                            <div class="w-3 h-3 bg-gray-300 rounded-full mr-3"></div>
+                          <% end %>
+                          <div>
+                            <div class="font-medium text-gray-900">{year.name}</div>
+                            <div class="text-sm text-gray-500">{year.status}</div>
+                          </div>
+                        </div>
+                        <div class="flex space-x-2">
+                          <%= unless year.is_active do %>
+                            <button
+                              phx-click="set_active_year"
+                              phx-value-id={year.id}
+                              class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                            >
+                              Set Active
+                            </button>
+                          <% end %>
+                          <button
+                            phx-click="delete_academic_year"
+                            phx-value-id={year.id}
+                            data-confirm="Are you sure you want to delete this academic year?"
+                            class="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </Layouts.app>
