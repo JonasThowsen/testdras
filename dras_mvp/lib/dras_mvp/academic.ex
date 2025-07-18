@@ -48,6 +48,13 @@ defmodule DrasMvp.Academic do
   end
 
   @doc """
+  Deletes an academic year.
+  """
+  def delete_academic_year(%AcademicYear{} = academic_year) do
+    Repo.delete(academic_year)
+  end
+
+  @doc """
   Sets an academic year as active and deactivates all others.
   """
   def set_active_academic_year(%AcademicYear{} = academic_year) do
