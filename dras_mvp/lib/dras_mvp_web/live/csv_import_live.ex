@@ -187,9 +187,6 @@ defmodule DrasMvpWeb.CsvImportLive do
           {:ok, :created} ->
             %{acc | processed: acc.processed + 1, created: acc.created + 1}
 
-          {:ok, :updated} ->
-            %{acc | processed: acc.processed + 1, updated: acc.updated + 1}
-
           {:error, reason} ->
             error = %{row: row, reason: reason}
             %{acc | processed: acc.processed + 1, errors: [error | acc.errors]}
@@ -212,8 +209,6 @@ defmodule DrasMvpWeb.CsvImportLive do
   end
 
   defp import_exam_record(row) do
-    course_code = Map.get(row, "course_code", "")
-
     # For now, we'll create a simple exam record
     # In a real system, you'd lookup/create the course first
     exam_attrs = %{
