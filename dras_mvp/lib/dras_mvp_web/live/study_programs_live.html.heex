@@ -1,0 +1,333 @@
+<Layouts.app flash={@flash}>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header Section -->
+    <div class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Study Programs Management</h1>
+            <p class="text-gray-600 mt-1">Configure degree programs for the academic year</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <%= if @current_year do %>
+              <div class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-medium">
+                Active Year: {@current_year.name}
+              </div>
+            <% else %>
+              <div class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg font-medium">
+                No Active Year Selected
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Progress Indicator -->
+      <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Setup Progress - Phase 2</h2>
+          <span class="text-sm text-gray-600">Study Programs Configuration</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <.icon name="hero-check" class="w-5 h-5 text-white" />
+            </div>
+            <span class="ml-2 text-sm text-gray-600">Academic Year</span>
+          </div>
+          <div class="flex-1 h-1 bg-gray-200">
+            <div class="h-1 bg-blue-500 w-1/6"></div>
+          </div>
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <.icon name="hero-academic-cap" class="w-5 h-5 text-white" />
+            </div>
+            <span class="ml-2 text-sm font-medium text-blue-600">Study Programs</span>
+          </div>
+          <div class="flex-1 h-1 bg-gray-200"></div>
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+              <.icon name="hero-book-open" class="w-5 h-5 text-gray-500" />
+            </div>
+            <span class="ml-2 text-sm text-gray-500">Courses</span>
+          </div>
+        </div>
+      </div>
+      
+<!-- Action Bar -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-lg font-medium text-gray-900">Study Programs</h3>
+          <p class="text-sm text-gray-600">
+            Configure degree programs, departments, and duration
+          </p>
+        </div>
+        <button
+          phx-click="show_create_form"
+          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+        >
+          <.icon name="hero-plus" class="w-4 h-4 inline mr-2" /> Add Study Program
+        </button>
+      </div>
+      
+<!-- Study Programs Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <%= for program <- @study_programs do %>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+            <div class="p-6">
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center">
+                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <.icon name="hero-academic-cap" class="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div class="ml-3">
+                    <h4 class="text-lg font-medium text-gray-900">{program.name}</h4>
+                    <p class="text-sm text-gray-600">{program.code}</p>
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <button
+                    phx-click="delete_study_program"
+                    phx-value-id={program.id}
+                    data-confirm="Are you sure you want to delete this study program?"
+                    class="text-red-600 hover:text-red-800 p-1 rounded"
+                  >
+                    <.icon name="hero-trash" class="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Degree Type:</span>
+                  <span class="text-sm font-medium text-gray-900">{program.degree_type}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Duration:</span>
+                  <span class="text-sm font-medium text-gray-900">
+                    {program.duration_years} years
+                  </span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Department:</span>
+                  <span class="text-sm font-medium text-gray-900">{program.department}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Status:</span>
+                  <span class={"text-sm font-medium #{if program.status == "active", do: "text-green-600", else: "text-yellow-600"}"}>
+                    {String.capitalize(program.status)}
+                  </span>
+                </div>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <button class="w-full bg-gray-100 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-200 transition-colors text-sm font-medium">
+                  Configure Courses
+                </button>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        
+<!-- Add New Program Card -->
+        <div
+          phx-click="show_create_form"
+          class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors cursor-pointer"
+        >
+          <div class="p-6 text-center">
+            <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <.icon name="hero-plus" class="w-6 h-6 text-gray-500" />
+            </div>
+            <h4 class="text-lg font-medium text-gray-900 mb-2">Add Study Program</h4>
+            <p class="text-sm text-gray-600">
+              Create a new degree program for this academic year
+            </p>
+          </div>
+        </div>
+      </div>
+      
+<!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-academic-cap" class="w-4 h-4 text-blue-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Total Programs</p>
+              <p class="text-lg font-semibold text-gray-900">{length(@study_programs)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-check-circle" class="w-4 h-4 text-green-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Active Programs</p>
+              <p class="text-lg font-semibold text-gray-900">
+                {Enum.count(@study_programs, fn p -> p.status == "active" end)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-building-office" class="w-4 h-4 text-purple-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Departments</p>
+              <p class="text-lg font-semibold text-gray-900">
+                {length(Enum.uniq_by(@study_programs, & &1.department))}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+              <.icon name="hero-clock" class="w-4 h-4 text-orange-600" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-gray-600">Avg. Duration</p>
+              <p class="text-lg font-semibold text-gray-900">
+                <%= if length(@study_programs) > 0 do %>
+                  {Float.round(
+                    Enum.sum(Enum.map(@study_programs, & &1.duration_years)) /
+                      length(@study_programs),
+                    1
+                  )} years
+                <% else %>
+                  0 years
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+<!-- Create Study Program Modal -->
+    <%= if @show_create_form do %>
+      <div
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        phx-click="hide_create_form"
+      >
+        <div
+          class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+          phx-click-away="hide_create_form"
+        >
+          <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Create New Study Program</h3>
+
+            <form phx-submit="create_study_program" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Program Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="e.g., Bachelor in Medicine"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Program Code
+                </label>
+                <input
+                  type="text"
+                  name="code"
+                  placeholder="e.g., MED-BACH"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Degree Type
+                </label>
+                <select
+                  name="degree_type"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select degree type</option>
+                  <option value="Bachelor">Bachelor</option>
+                  <option value="Master">Master</option>
+                  <option value="PhD">PhD</option>
+                  <option value="Certificate">Certificate</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Duration (Years)
+                </label>
+                <select
+                  name="duration_years"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select duration</option>
+                  <option value="1">1 year</option>
+                  <option value="2">2 years</option>
+                  <option value="3">3 years</option>
+                  <option value="4">4 years</option>
+                  <option value="5">5 years</option>
+                  <option value="6">6 years</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Department
+                </label>
+                <select
+                  name="department"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                >
+                  <option value="">Select department</option>
+                  <option value="Medicine">Medicine</option>
+                  <option value="Biomedical Sciences">Biomedical Sciences</option>
+                  <option value="Nursing">Nursing</option>
+                  <option value="Public Health">Public Health</option>
+                  <option value="Psychology">Psychology</option>
+                  <option value="Dentistry">Dentistry</option>
+                </select>
+              </div>
+
+              <div class="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  phx-click="hide_create_form"
+                  class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Create Program
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</Layouts.app>
