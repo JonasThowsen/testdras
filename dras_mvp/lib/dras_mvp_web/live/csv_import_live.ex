@@ -202,6 +202,15 @@ defmodule DrasMvpWeb.CsvImportLive do
     end
   end
 
+  defp status_class(status) do
+    case status do
+      :waiting -> "bg-gray-400"
+      :preview -> "bg-yellow-500"
+      :complete -> "bg-green-500"
+      :error -> "bg-red-500"
+    end
+  end
+
   defp import_exam_record(row) do
     course_code = Map.get(row, "course_code", "")
 
