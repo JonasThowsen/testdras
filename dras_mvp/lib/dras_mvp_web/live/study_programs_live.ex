@@ -61,7 +61,7 @@ defmodule DrasMvpWeb.StudyProgramsLive do
          |> assign(:show_create_form, false)
          |> put_flash(:info, "Study program created successfully!")}
 
-      {:error, _changeset} ->
+      _ ->
         {:noreply, put_flash(socket, :error, "Error creating study program")}
     end
   end
@@ -79,7 +79,7 @@ defmodule DrasMvpWeb.StudyProgramsLive do
          |> assign(:study_programs, study_programs)
          |> put_flash(:info, "Study program deleted successfully!")}
 
-      {:error, _} ->
+      _ ->
         {:noreply, put_flash(socket, :error, "Error deleting study program")}
     end
   end
