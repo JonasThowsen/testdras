@@ -19,6 +19,7 @@ defmodule DrasMvpWeb.Router do
 
     live "/", AcademicYearLive, :index
     live "/csv-import", CsvImportLive
+    live "/study-programs", StudyProgramsLive
   end
 
   # Other scopes may use custom stacks.
