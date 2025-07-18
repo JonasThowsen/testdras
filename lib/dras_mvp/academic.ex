@@ -193,19 +193,20 @@ defmodule DrasMvp.Academic do
   end
 
   @doc """
+  Finds a course by code for a specific academic year.
+  """
+  def find_course_by_code(course_code, academic_year_id) do
+    Repo.one(
+      from(c in Course,
+        where: c.code == ^course_code and c.academic_year_id == ^academic_year_id,
+        limit: 1
+      )
+    )
+  end
+
+  @doc """
   Gets a single course.
   """
-  @doc """\
-  Finds a course by code for a specific academic year.\
-  """\
-  def find_course_by_code(course_code, academic_year_id) do\
-    Repo.one(\
-      from c in Course,\
-        where: c.code == ^course_code and c.academic_year_id == ^academic_year_id,\
-        limit: 1\
-    )\
-  end\
-
   def get_course!(id) do
     Repo.get!(Course, id)
     |> Repo.preload([:academic_year, staff_assignments: :staff])
