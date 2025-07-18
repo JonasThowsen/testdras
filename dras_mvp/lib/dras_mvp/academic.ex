@@ -69,6 +69,52 @@ defmodule DrasMvp.Academic do
     end)
   end
 
+  ## Study Programs
+
+  @doc """
+  Returns the list of study programs for an academic year.
+  """
+  def list_study_programs(academic_year_id) do
+    # For now, return sample data - will be replaced with real database schema
+    [
+      %{
+        id: 1,
+        name: "Bachelor in Medicine",
+        code: "MED-BACH",
+        degree_type: "Bachelor",
+        duration_years: 3,
+        department: "Medicine",
+        status: "active",
+        academic_year_id: academic_year_id
+      },
+      %{
+        id: 2,
+        name: "Master in Biomedical Sciences",
+        code: "BIO-MAST",
+        degree_type: "Master",
+        duration_years: 2,
+        department: "Biomedical Sciences",
+        status: "active",
+        academic_year_id: academic_year_id
+      }
+    ]
+  end
+
+  @doc """
+  Creates a study program.
+  """
+  def create_study_program(attrs \\ %{}) do
+    # Stub implementation - return success for now
+    {:ok, %{id: :rand.uniform(1000), name: attrs[:name] || "New Program"}}
+  end
+
+  @doc """
+  Deletes a study program.
+  """
+  def delete_study_program(study_program) do
+    {:ok, study_program}
+  end
+
   ## Courses
 
   @doc """
@@ -81,6 +127,68 @@ defmodule DrasMvp.Academic do
         order_by: [asc: c.code],
         preload: [:academic_year, staff_assignments: :staff]
     )
+  end
+
+  @doc """
+  Returns courses with formatted staff assignments for UI display.
+  """
+  def list_courses_with_assignments(academic_year_id) do
+    courses = list_courses(academic_year_id)
+
+    # If no real courses, return sample data
+    if length(courses) == 0 do
+      [
+        %{
+          id: 1,
+          code: "MED-1001",
+          name: "Introduction to Medicine",
+          credits: 6.0,
+          department: "Medicine",
+          level: "Bachelor",
+          semester: "Fall",
+          status: "active",
+          assigned_staff: [
+            %{name: "Dr. Smith", type: "lecturer", hours: 40.0},
+            %{name: "Prof. Johnson", type: "examiner", hours: 8.0}
+          ]
+        },
+        %{
+          id: 2,
+          code: "BIO-2001",
+          name: "Advanced Biochemistry",
+          credits: 4.0,
+          department: "Biomedical Sciences",
+          level: "Master",
+          semester: "Spring",
+          status: "draft",
+          assigned_staff: []
+        }
+      ]
+    else
+      # Format real courses with staff assignments
+      Enum.map(courses, fn course ->
+        assigned_staff =
+          Enum.map(course.staff_assignments, fn assignment ->
+            %{
+              name: "#{assignment.staff.first_name} #{assignment.staff.last_name}",
+              type: assignment.assignment_type,
+              hours: assignment.hours_allocated
+            }
+          end)
+
+        %{
+          id: course.id,
+          code: course.code,
+          name: course.name,
+          credits: course.credits,
+          department: course.department,
+          level: course.level,
+          semester: course.semester,
+          status: course.status,
+          assigned_staff: assigned_staff
+        }
+      end)
+    end
   end
 
   @doc """
@@ -109,18 +217,45 @@ defmodule DrasMvp.Academic do
     |> Repo.update()
   end
 
+  @doc """
+  Deletes a course.
+  """
+  def delete_course(%Course{} = course) do
+    Repo.delete(course)
+  end
+
   ## Staff
 
   @doc """
   Returns the list of active staff members.
   """
   def list_staff do
-    Repo.all(
-      from s in Staff,
-        where: s.is_active == true,
-        order_by: [asc: s.last_name, asc: s.first_name],
-        preload: [staff_assignments: [:course]]
-    )
+    staff =
+      Repo.all(
+        from s in Staff,
+          where: s.is_active == true,
+          order_by: [asc: s.last_name, asc: s.first_name],
+          preload: [staff_assignments: [:course]]
+      )
+
+    # If no real staff, return sample data
+    if length(staff) == 0 do
+      [
+        %{id: 1, name: "Dr. Smith", department: "Medicine", workload_limit: 100.0},
+        %{id: 2, name: "Prof. Johnson", department: "Medicine", workload_limit: 100.0},
+        %{id: 3, name: "Dr. Brown", department: "Biomedical Sciences", workload_limit: 100.0}
+      ]
+    else
+      # Format real staff data
+      Enum.map(staff, fn staff_member ->
+        %{
+          id: staff_member.id,
+          name: "#{staff_member.first_name} #{staff_member.last_name}",
+          department: staff_member.department,
+          workload_limit: staff_member.workload_limit
+        }
+      end)
+    end
   end
 
   @doc """
