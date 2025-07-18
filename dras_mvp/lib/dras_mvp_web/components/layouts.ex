@@ -36,7 +36,53 @@ defmodule DrasMvpWeb.Layouts do
   def app(assigns) do
     ~H"""
     <div class="min-h-screen bg-gray-50">
-      {render_slot(@inner_block)}
+      <!-- Navigation Header -->
+      <nav class="bg-white shadow border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex justify-between items-center h-16">
+            <!-- Logo & Main Title -->
+            <div class="flex items-center">
+              <.link navigate="/" class="flex items-center space-x-2 hover:opacity-80">
+                <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                  <.icon name="hero-academic-cap" class="w-5 h-5 text-white" />
+                </div>
+                <span class="text-xl font-semibold text-gray-900">DRAS</span>
+              </.link>
+            </div>
+            
+    <!-- Navigation Links -->
+            <div class="flex items-center space-x-6">
+              <.link
+                navigate="/"
+                class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Dashboard
+              </.link>
+              <.link
+                navigate="/csv-import"
+                class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                CSV Import
+              </.link>
+              
+    <!-- Quick Actions -->
+              <div class="flex items-center space-x-2 border-l border-gray-300 pl-6">
+                <button class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                  Quick Setup
+                </button>
+                <button class="text-gray-600 hover:text-gray-900 p-2 rounded-md">
+                  <.icon name="hero-cog-6-tooth" class="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+    <!-- Main Content -->
+      <main>
+        {render_slot(@inner_block)}
+      </main>
     </div>
 
     <.flash_group flash={@flash} />
