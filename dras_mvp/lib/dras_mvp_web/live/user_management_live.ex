@@ -48,16 +48,16 @@ defmodule DrasMvpWeb.UserManagementLive do
     %{
       "email" => email,
       "password" => password,
-      "role" => role,
-      "department" => department,
-      "full_name" => full_name
+      "role" => _role,
+      "department" => _department,
+      "full_name" => _full_name
     } = params
 
     case Accounts.register_user(%{
            email: email,
            password: password
          }) do
-      {:ok, user} ->
+      {:ok, _user} ->
         # In a real implementation, we'd update user with role/department
         users = Accounts.list_users()
 
@@ -93,7 +93,7 @@ defmodule DrasMvpWeb.UserManagementLive do
   @impl true
   def handle_event("toggle_status", %{"id" => id}, socket) do
     user = Enum.find(socket.assigns.users, fn u -> u.id == String.to_integer(id) end)
-    new_status = if get_user_status(user) == "active", do: "inactive", else: "active"
+    _new_status = if get_user_status(user) == "active", do: "inactive", else: "active"
 
     # In a real implementation, we'd update the user status
     users = Accounts.list_users()
