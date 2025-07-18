@@ -18,6 +18,7 @@ defmodule DrasMvpWeb.Router do
     pipe_through :browser
 
     live "/", AcademicYearLive, :index
+    live "/csv-import", CsvImportLive
   end
 
   # Other scopes may use custom stacks.
