@@ -42,10 +42,10 @@ defmodule DrasMvpWeb.Router do
   ## Authentication routes
 
   scope "/", DrasMvpWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :ensure_authenticated_user]
 
-    live_session :require_authenticated_user,
-      on_mount: [{DrasMvpWeb.UserAuth, :require_authenticated}] do
+    live_session :ensure_authenticated_user,
+      on_mount: [{DrasMvpWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
 
