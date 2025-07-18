@@ -88,7 +88,7 @@ defmodule DrasMvpWeb.CourseManagementLive do
          |> assign(:show_create_form, false)
          |> put_flash(:info, "Course created successfully!")}
 
-      {:error, _changeset} ->
+      _ ->
         {:noreply, put_flash(socket, :error, "Error creating course")}
     end
   end
@@ -118,7 +118,7 @@ defmodule DrasMvpWeb.CourseManagementLive do
          |> assign(:selected_course, nil)
          |> put_flash(:info, "Staff assigned successfully!")}
 
-      {:error, _changeset} ->
+      _ ->
         {:noreply, put_flash(socket, :error, "Error assigning staff")}
     end
   end
@@ -136,7 +136,7 @@ defmodule DrasMvpWeb.CourseManagementLive do
          |> assign(:courses, courses)
          |> put_flash(:info, "Course deleted successfully!")}
 
-      {:error, _} ->
+      _ ->
         {:noreply, put_flash(socket, :error, "Error deleting course")}
     end
   end
