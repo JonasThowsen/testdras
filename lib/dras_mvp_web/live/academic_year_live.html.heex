@@ -121,9 +121,7 @@
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-600 mb-3">
-              Set up Bachelor, Master, and other degree programs
-            </p>
+            <p class="text-sm text-gray-600 mb-3">Set up Bachelor, Master, and other degree programs</p>
             <.link
               navigate="/study-programs"
               class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.academic_year < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
@@ -160,9 +158,7 @@
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-600 mb-3">
-              Create and manage courses, credit hours, and semester assignments
-            </p>
+            <p class="text-sm text-gray-600 mb-3">Create and manage courses, credit hours, and semester assignments</p>
             <button
               disabled={@setup_progress.study_programs < 100}
               class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
@@ -199,9 +195,7 @@
                 </div>
               </div>
             </div>
-            <p class="text-sm text-gray-600 mb-3">
-              Set up student classes, groups, and course instances
-            </p>
+            <p class="text-sm text-gray-600 mb-3">Set up student classes, groups, and course instances</p>
             <button
               disabled={@setup_progress.courses < 100}
               class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.courses < 100, do: "bg-blue-600 text-white hover:bg-blue-700"}"}
@@ -283,12 +277,12 @@
             <p class="text-sm text-gray-600 mb-3">
               Upload exam data from exam office (CSV format)
             </p>
-            <.link
+            <a
               href="/csv-import"
               class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.teaching_assignments < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Import Exam Data
-            </.link>
+            </a>
           </div>
         </div>
       </div>
