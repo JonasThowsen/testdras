@@ -52,27 +52,61 @@ defmodule DrasMvpWeb.Layouts do
             
     <!-- Navigation Links -->
             <div class="flex items-center space-x-6">
-              <.link
-                navigate="/"
-                class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Dashboard
-              </.link>
-              <.link
-                navigate="/csv-import"
-                class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                CSV Import
-              </.link>
+              <%= if @current_scope do %>
+                <.link
+                  navigate="/"
+                  class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Dashboard
+                </.link>
+                <.link
+                  navigate="/csv-import"
+                  class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  CSV Import
+                </.link>
+              <% end %>
               
-    <!-- Quick Actions -->
+    <!-- Authentication Section -->
               <div class="flex items-center space-x-2 border-l border-gray-300 pl-6">
-                <button class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
-                  Quick Setup
-                </button>
-                <button class="text-gray-600 hover:text-gray-900 p-2 rounded-md">
-                  <.icon name="hero-cog-6-tooth" class="w-5 h-5" />
-                </button>
+                <%= if @current_scope do %>
+                  <!-- Logged in user controls -->
+                  <div class="flex items-center space-x-3">
+                    <span class="text-sm text-gray-600">
+                      Welcome,
+                      <span class="font-medium text-gray-900">{@current_scope.user.email}</span>
+                    </span>
+                    <.link
+                      navigate="/users/settings"
+                      class="text-gray-600 hover:text-gray-900 text-sm font-medium"
+                    >
+                      Settings
+                    </.link>
+                    <.link
+                      href="/users/log-out"
+                      method="delete"
+                      class="bg-red-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+                    >
+                      Log Out
+                    </.link>
+                  </div>
+                <% else %>
+                  <!-- Not logged in controls -->
+                  <div class="flex items-center space-x-2">
+                    <.link
+                      navigate="/users/log-in"
+                      class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Log In
+                    </.link>
+                    <.link
+                      navigate="/users/register"
+                      class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      Register
+                    </.link>
+                  </div>
+                <% end %>
               </div>
             </div>
           </div>
