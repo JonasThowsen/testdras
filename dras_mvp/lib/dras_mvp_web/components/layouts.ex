@@ -34,6 +34,10 @@ defmodule DrasMvpWeb.Layouts do
   slot :inner_block, required: true
 
   def app(assigns) do
+    # Add defensive check for current_scope and user
+    logged_in? = assigns[:current_scope] && assigns.current_scope[:user]
+    assigns = assign(assigns, :logged_in?, logged_in?)
+
     ~H"""
     <div class="min-h-screen bg-gray-50">
       <!-- Navigation Header -->
@@ -52,7 +56,7 @@ defmodule DrasMvpWeb.Layouts do
             
     <!-- Navigation Links -->
             <div class="flex items-center space-x-6">
-              <%= if @current_scope do %>
+              <%= if @logged_in? do %>
                 <.link
                   navigate="/"
                   class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -65,16 +69,40 @@ defmodule DrasMvpWeb.Layouts do
                 >
                   CSV Import
                 </.link>
+                <.link
+                  navigate="/study-programs"
+                  class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Study Programs
+                </.link>
+                <.link
+                  navigate="/courses"
+                  class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Courses
+                </.link>
+                <.link
+                  navigate="/users"
+                  class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Users
+                </.link>
               <% end %>
               
     <!-- Authentication Section -->
               <div class="flex items-center space-x-2 border-l border-gray-300 pl-6">
-                <%= if @current_scope do %>
+                <%= if @logged_in? do %>
                   <!-- Logged in user controls -->
                   <div class="flex items-center space-x-3">
                     <span class="text-sm text-gray-600">
                       Welcome,
-                      <span class="font-medium text-gray-900">{@current_scope.user.email}</span>
+                      <span class="font-medium text-gray-900">
+                        <%= if @current_scope && @current_scope.user do %>
+                          {@current_scope.user.email}
+                        <% else %>
+                          User
+                        <% end %>
+                      </span>
                     </span>
                     <.link
                       navigate="/users/settings"
