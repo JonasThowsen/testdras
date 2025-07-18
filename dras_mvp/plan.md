@@ -6,16 +6,20 @@ Modernizing the DRAS (DMMHs ressursadministrasjonssystem) with a Phoenix LiveVie
 ## Completed Steps
 - [x] Generate Phoenix LiveView project `dras_mvp`
 - [x] Start server for development
-- [ ] Replace home page with government/institutional design mockup
-- [ ] Create database migrations for core entities:
+- [x] Replace home page with government/institutional design mockup
+- [x] Create database migrations for core entities:
   - Academic years with status tracking
   - Courses with metadata
   - Staff with roles and assignments
   - Resource allocations
-- [ ] Implement Academic Year Management LiveView:
+- [x] Implement Academic Year Management LiveView:
   - Clear year selection interface
   - Automatic year progression features
   - Status indicators for setup completion
+- [x] Style layouts with government/institutional design:
+  - Update app.css with professional theme
+  - Modify root.html.heex and Layouts.app
+  - Ensure accessibility standards
 - [ ] Build Course Management system:
   - Course listing with search/filter
   - Course creation with validation
@@ -32,10 +36,6 @@ Modernizing the DRAS (DMMHs ressursadministrasjonssystem) with a Phoenix LiveVie
   - Resource allocation overview
   - Export to Excel/PDF
   - Visual charts and metrics
-- [ ] Style layouts with government/institutional design:
-  - Update app.css with professional theme
-  - Modify root.html.heex and Layouts.app
-  - Ensure accessibility standards
 - [ ] Final testing and verification
 
 ## Design Goals
@@ -44,4 +44,4 @@ Modernizing the DRAS (DMMHs ressursadministrasjonssystem) with a Phoenix LiveVie
 - High accessibility standards
 - Reliable data validation and error handling
 - Streamlined workflows replacing manual CSV processes
-</TOOLMETA>
+
