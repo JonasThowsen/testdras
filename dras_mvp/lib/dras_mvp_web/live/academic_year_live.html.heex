@@ -1,4 +1,4 @@
-<Layouts.app flash={@flash}>
+<Layouts.app flash={@flash} current_scope={@current_scope}>
   <div class="min-h-screen bg-gray-50">
     <!-- Header Section -->
     <div class="bg-white shadow">
@@ -126,7 +126,7 @@
             </p>
             <a
               href="/study-programs"
-              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.academic_year < 100, do: "bg-blue-600 text-white hover:bg-blue-700 pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.academic_year < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Study Programs
             </a>
@@ -163,12 +163,12 @@
             <p class="text-sm text-gray-600 mb-3">
               Create and manage courses, credit hours, and semester assignments
             </p>
-            <button
-              disabled={false}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-blue-600 text-white hover:bg-blue-700", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            <a
+              href="/courses"
+              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.study_programs < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Courses
-            </button>
+            </a>
           </div>
         </div>
         
@@ -204,7 +204,7 @@
             </p>
             <button
               disabled={@setup_progress.courses < 100}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.courses < 100, do: "bg-blue-600 text-white hover:bg-blue-700", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.courses < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Classes
             </button>
@@ -246,7 +246,7 @@
             </p>
             <button
               disabled={@setup_progress.classes < 100}
-              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.classes < 100, do: "bg-blue-600 text-white hover:bg-blue-700", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.classes < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Manage Teaching Assignments
             </button>
@@ -285,7 +285,7 @@
             </p>
             <a
               href="/csv-import"
-              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.teaching_assignments < 100, do: "bg-blue-600 text-white hover:bg-blue-700 pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+              class={"w-full inline-block text-center px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.teaching_assignments < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
             >
               Import Exam Data
             </a>
@@ -306,7 +306,7 @@
           <p class="text-sm text-gray-600 mb-4">Manage academic personnel and their roles</p>
           <button
             disabled={@setup_progress.exam_data < 100}
-            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.exam_data < 100, do: "bg-blue-600 text-white hover:bg-blue-700", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.exam_data < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
           >
             Manage Staff
           </button>
@@ -325,7 +325,7 @@
           </p>
           <button
             disabled={@setup_progress.staff_management < 100}
-            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.staff_management < 100, do: "bg-blue-600 text-white hover:bg-blue-700", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.staff_management < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
           >
             Calculate Resources
           </button>
@@ -342,7 +342,7 @@
           <p class="text-sm text-gray-600 mb-4">Generate reports and view analytics</p>
           <button
             disabled={@setup_progress.resource_allocation < 100}
-            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.resource_allocation < 100, do: "bg-blue-600 text-white hover:bg-blue-700", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
+            class={"w-full px-4 py-2 rounded-md transition-colors text-sm font-medium #{if @setup_progress.resource_allocation < 100, do: "bg-gray-300 text-gray-500 cursor-not-allowed", else: "bg-blue-600 text-white hover:bg-blue-700"}"}
           >
             View Reports
           </button>
@@ -357,9 +357,12 @@
             <h3 class="ml-3 text-lg font-medium text-gray-900">System Admin</h3>
           </div>
           <p class="text-sm text-gray-600 mb-4">User management and system configuration</p>
-          <button class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors text-sm font-medium">
+          <a
+            href="/users"
+            class="w-full inline-block text-center bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors text-sm font-medium"
+          >
             Admin Panel
-          </button>
+          </a>
         </div>
       </div>
       
