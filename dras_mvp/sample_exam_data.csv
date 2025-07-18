@@ -1,0 +1,11 @@
+course_code,exam_date,exam_type,student_count,examiner_hours,grading_hours
+MED-1001,2024-12-15,written,25,8.0,12.0
+BIO-2001,2024-12-18,oral,15,6.0,8.0
+MED-1002,2024-12-20,practical,30,10.0,15.0
+PSY-3001,2024-12-22,written,20,7.0,10.0
+NUR-2001,2024-12-28,oral,18,5.5,9.0
+PHY-1001,2025-01-05,written,35,12.0,18.0
+BIO-1001,2025-01-08,practical,22,8.5,13.0
+MED-2001,2025-01-10,written,28,9.0,14.0
+PSY-2001,2025-01-12,oral,16,6.0,8.5
+NUR-3001,2025-01-15,practical,24,7.5,11.0
