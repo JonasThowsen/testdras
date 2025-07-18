@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DRAS - Resource Administration System</title>
+    <style>
+      .nav-header { background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%); }
+      .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+      .status-indicator { width: 12px; height: 12px; border-radius: 50%; }
+      .status-complete { background-color: #10b981; }
+      .status-pending { background-color: #f59e0b; }
+      .status-error { background-color: #ef4444; }
+    </style>
+  </head>
+  <body class="h-full bg-gray-50 font-sans">
+    <!-- Government Header -->
+    <header class="nav-header text-white shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+              <span class="text-blue-700 font-bold text-lg">D</span>
+            </div>
+            <div>
+              <h1 class="text-xl font-semibold">DRAS</h1>
+              <p class="text-blue-100 text-sm">Resource Administration System</p>
+            </div>
+          </div>
+          <nav class="hidden md:flex space-x-6">
+            <a href="#" class="text-blue-100 hover:text-white px-3 py-2 rounded-md">Dashboard</a>
+            <a href="#" class="text-blue-100 hover:text-white px-3 py-2 rounded-md">
+              Academic Years
+            </a>
+            <a href="#" class="text-blue-100 hover:text-white px-3 py-2 rounded-md">Courses</a>
+            <a href="#" class="text-blue-100 hover:text-white px-3 py-2 rounded-md">Staff</a>
+            <a href="#" class="text-blue-100 hover:text-white px-3 py-2 rounded-md">Reports</a>
+          </nav>
+          <div class="text-sm text-blue-100">
+            Academic Year: <span class="text-white font-semibold">2024-2025</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+<!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Quick Actions Bar -->
+      <div class="bg-white rounded-lg card-shadow p-6 mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div class="flex flex-wrap gap-4">
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium">
+            Create New Course
+          </button>
+          <button class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 font-medium">
+            Import CSV Data
+          </button>
+          <button class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 font-medium">
+            Assign Staff
+          </button>
+          <button class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 font-medium">
+            Generate Report
+          </button>
+        </div>
+      </div>
+      
+<!-- Dashboard Overview -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Academic Year Status -->
+        <div class="bg-white rounded-lg card-shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Academic Year Status</h3>
+            <div class="status-indicator status-pending"></div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">Course Setup</span>
+              <div class="flex items-center space-x-2">
+                <div class="status-indicator status-complete"></div>
+                <span class="text-sm font-medium text-gray-900">85/120</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">Staff Assignments</span>
+              <div class="flex items-center space-x-2">
+                <div class="status-indicator status-pending"></div>
+                <span class="text-sm font-medium text-gray-900">42/85</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">Resource Allocation</span>
+              <div class="flex items-center space-x-2">
+                <div class="status-indicator status-error"></div>
+                <span class="text-sm font-medium text-gray-900">12/42</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+<!-- Recent Activity -->
+        <div class="bg-white rounded-lg card-shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+          <div class="space-y-3">
+            <div class="flex items-start space-x-3">
+              <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+              <div>
+                <p class="text-sm text-gray-900 font-medium">CSV import completed</p>
+                <p class="text-xs text-gray-500">45 exam records processed</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+              <div>
+                <p class="text-sm text-gray-900 font-medium">New course created: BIO-2001</p>
+                <p class="text-xs text-gray-500">Molecular Biology Fundamentals</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+              <div>
+                <p class="text-sm text-gray-900 font-medium">Staff assignment updated</p>
+                <p class="text-xs text-gray-500">Dr. Hansen assigned to MED-3005</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+<!-- System Overview -->
+        <div class="bg-white rounded-lg card-shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">System Overview</h3>
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Total Courses</span>
+              <span class="text-lg font-semibold text-gray-900">120</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Active Staff</span>
+              <span class="text-lg font-semibold text-gray-900">85</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Pending Assignments</span>
+              <span class="text-lg font-semibold text-orange-600">43</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Resource Utilization</span>
+              <span class="text-lg font-semibold text-gray-900">78%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+<!-- Course Management Preview -->
+      <div class="mt-8 bg-white rounded-lg card-shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Course Management</h3>
+        </div>
+        <div class="p-6">
+          <div class="overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Course Code
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Course Name
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Assigned Staff
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    MED-1001
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    Introduction to Medicine
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    Dr. Olsen, Dr. Berg
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                      Complete
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <a href="#" class="text-blue-600 hover:text-blue-900">Edit</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    BIO-2001
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    Molecular Biology Fundamentals
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dr. Hansen</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                      Pending
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <a href="#" class="text-blue-600 hover:text-blue-900">Edit</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+<!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+          <p class="text-sm text-gray-500">© 2024 DRAS - Resource Administration System</p>
+          <p class="text-sm text-gray-500">Version 2.0 MVP</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
